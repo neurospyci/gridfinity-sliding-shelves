@@ -25,6 +25,8 @@ Set `part = "cabinet"` and press F6 to export the cabinet STL. Set `part = "draw
 
 Key Customizer controls are `gridx`, `gridy`, `drawer_count`, `drawer_pitch`, `drawer_clearance`, `wall_thickness`, `rail_width`, `hole_diameter`, `hole_pitch`, `stagger_holes`, `include_lip`, and the Gridfinity base-hole choices. Cabinet height derives from drawer count and pitch. Coordinates are centered on the Gridfinity footprint; the front is negative Y. The cavity begins above the 7 mm upstream base and a separate floor, so the Gridfinity base is retained. Each ledge runs front to back under its drawer edge.
 
+See the [complete parameter guide](PARAMETERS.md) for every control, dimensional formulas, interactions, and practical print effects.
+
 The default 1.7 mm pin holes and 0.35 mm clearance are starting values. Test one tray and a short slide fit with your printer and actual pin posts/clutches before printing the full cabinet. Increase `drawer_pitch` if pin faces or clutches collide vertically.
 
 ## Rendering
