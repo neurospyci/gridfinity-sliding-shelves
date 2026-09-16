@@ -9,16 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install OpenSCAD and Gridfinity Rebuilt
+      - name: Install OpenSCAD
         run: |
           sudo apt-get update
           sudo apt-get install -y openscad
-          mkdir -p lib
-          git clone https://github.com/kennetek/gridfinity-rebuilt-openscad.git lib/gridfinity-rebuilt-openscad
-          git -C lib/gridfinity-rebuilt-openscad checkout 910e22d8607fd7f5f51ad5e5cbc5287a76810bfd
       - name: Check assembly and printable parts
-        env:
-          OPENSCADPATH: ${{ github.workspace }}/lib
         run: |
           set -euo pipefail
           openscad -o /tmp/assembly.csg -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/assembly.log

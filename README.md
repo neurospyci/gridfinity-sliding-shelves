@@ -2,34 +2,20 @@
 
 A parametric Gridfinity cabinet for enamel pins, with four independently sliding perforated trays by default. The Gridfinity base and stacking lip come from [Gridfinity Rebuilt](https://github.com/kennetek/gridfinity-rebuilt-openscad); the drawer cavity, side rails, and trays are custom geometry.
 
-## Install the dependency in OpenSCAD
+## Download and open
 
-If OpenSCAD says `Can't open include file 'gridfinity-rebuilt-openscad/src/core/standard.scad'`, the dependency is not installed where OpenSCAD can find it. The later `BASE_HEIGHT` and `new_bin` errors are consequences of this missing file.
-
-On Windows, download this repository as a ZIP, extract it, and run `install-gridfinity-dependency.ps1` from PowerShell to install the pinned upstream library in your Documents OpenSCAD library folder:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install-gridfinity-dependency.ps1
-```
-
-Then reopen `gridfinity-pin-drawers.scad`. The script leaves an existing complete installation untouched and stops if the target folder is incomplete.
-
-Alternatively, install manually:
-
-This design requires the **complete** Gridfinity Rebuilt repository. Download its [ZIP archive](https://github.com/kennetek/gridfinity-rebuilt-openscad/archive/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd.zip) and extract it. In OpenSCAD, choose **File → Show Library Folder**. Put the extracted folder inside `libraries` and rename it exactly `gridfinity-rebuilt-openscad`.
-
-The resulting layout must be:
+Download this repository as a ZIP and extract the **whole folder**. Open `gridfinity-pin-drawers.scad` from that folder. Gridfinity Rebuilt is included under `vendor/gridfinity-rebuilt-openscad`, so there is no separate library installation or setup script.
 
 ```text
-OpenSCAD/libraries/
-└── gridfinity-rebuilt-openscad/
-    ├── gridfinity-rebuilt-bins.scad
+gridfinity-sliding-shelves/
+├── gridfinity-pin-drawers.scad
+└── vendor/gridfinity-rebuilt-openscad/
+    ├── LICENSE
     ├── src/core/bin.scad
-    ├── src/core/standard.scad
     └── src/helpers/...
 ```
 
-The ZIP normally extracts into a commit-suffixed folder; rename that folder, not just the ZIP. Keep all its files, including `src` and `external`. You can also put the renamed `gridfinity-rebuilt-openscad` folder directly beside `gridfinity-pin-drawers.scad` (for example, at `D:/OpenScad_Projs/gridfinity-rebuilt-openscad`). The design file can otherwise be opened from **any** folder, including `D:/OpenScad_Projs`; it does not need to be copied into the dependency. If OpenSCAD is already open, reopen the design after installing the library. Use **Help → Library Info** to check the library path if imports still fail. The tested dependency revision is [`910e22d`](https://github.com/kennetek/gridfinity-rebuilt-openscad/tree/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd).
+If copying the SCAD file to `D:/OpenScad_Projs`, copy the `vendor` folder beside it too. A lone SCAD file cannot find the included library. The bundled source is pinned to [Gridfinity Rebuilt revision `910e22d`](https://github.com/kennetek/gridfinity-rebuilt-openscad/tree/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd).
 
 ## Use
 
@@ -43,7 +29,7 @@ The default 1.7 mm pin holes and 0.35 mm clearance are starting values. Test one
 
 ## Rendering
 
-The hole array is subtracted in 2D before extrusion, avoiding thousands of individual 3D cylinder booleans. F6 on the full 3×3 assembly can still take time. Export the cabinet and one drawer separately. If OpenSCAD reports missing `gridfinity-rebuilt-openscad/...` files, check the folder layout above; later undefined-function assertions are a consequence of those failed imports.
+The hole array is subtracted in 2D before extrusion, avoiding thousands of individual 3D cylinder booleans. F6 on the full 3×3 assembly can still take time. Export the cabinet and one drawer separately. If OpenSCAD reports missing `vendor/gridfinity-rebuilt-openscad/...` files, check that the whole project folder was extracted; later undefined-function assertions are a consequence of those failed imports.
 
-Gridfinity Rebuilt is MIT licensed; this project requires it as an external library and does not redistribute it.
+The bundled Gridfinity Rebuilt files retain their [MIT license](vendor/gridfinity-rebuilt-openscad/LICENSE). Their `threads.scad` dependency is marked CC0 in its source header. See [vendor provenance](vendor/gridfinity-rebuilt-openscad/VENDORED.md).
 
