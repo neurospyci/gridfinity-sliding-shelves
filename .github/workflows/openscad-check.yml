@@ -1,0 +1,31 @@
+name: OpenSCAD smoke test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OpenSCAD and Gridfinity Rebuilt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad
+          mkdir -p lib
+          git clone https://github.com/kennetek/gridfinity-rebuilt-openscad.git lib/gridfinity-rebuilt-openscad
+          git -C lib/gridfinity-rebuilt-openscad checkout 910e22d8607fd7f5f51ad5e5cbc5287a76810bfd
+      - name: Check assembly and printable parts
+        env:
+          OPENSCADPATH: ${{ github.workspace }}/lib
+        run: |
+          set -euo pipefail
+          openscad -o /tmp/assembly.csg -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/assembly.log
+          openscad -o /tmp/cabinet.stl -D 'part="cabinet"' -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/cabinet.log
+          openscad -o /tmp/drawer.stl -D 'part="drawer"' -D 'gridx=1' -D 'gridy=1' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/drawer.log
+          test -s /tmp/assembly.csg
+          test -s /tmp/cabinet.stl
+          test -s /tmp/drawer.stl
+          if grep -Ei 'WARNING|ERROR' /tmp/{assembly,cabinet,drawer}.log; then exit 1; fi
+
