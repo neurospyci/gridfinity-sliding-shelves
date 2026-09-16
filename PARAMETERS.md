@@ -11,6 +11,7 @@ The cabinet's front is **negative Y**. Drawers slide along Y; X is their width a
 | `part` | `"assembly"` | Selects the output: `"assembly"` places the cabinet and all drawers together; `"cabinet"` outputs only the housing; `"drawer"` outputs one tray at the origin. Export the latter two as separate STLs. Any other string currently falls back to assembly. |
 | `preview_open_drawer` | `1` | Selects which drawer moves in assembly view. Numbering starts at **1** from the bottom; `0` leaves every drawer closed. It does not change either printable part. It must be between 0 and `drawer_count`. In F5 preview, only this drawer shows its pin holes; if set to 0, all displayed drawers are simplified. |
 | `preview_pull` | `45` | Moves only the selected drawer toward negative Y by this distance in assembly view. It does **not** add a physical travel stop or change either STL exported with `part="cabinet"` or `part="drawer"`. Large values can show the drawer completely outside the housing. |
+| `report_cabinet_height` | `true` | Prints `Cabinet overall height ... mm` in OpenSCAD's **Console** after F5 or F6. The value comes from the upstream bin bounding box and includes the stacking lip when `include_lip=true`. Set it to false to hide the message. It changes no geometry or STL. |
 
 F5 uses simplified installed drawers to keep the dense hole pattern responsive. F6 uses every hole, including in the assembled view. The preview colors identify the selected drawer; they are not material or filament settings.
 

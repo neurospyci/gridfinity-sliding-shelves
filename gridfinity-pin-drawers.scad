@@ -2,6 +2,7 @@
 part = "assembly"; // [assembly:Assembly,cabinet:Cabinet,drawer:Drawer]
 preview_open_drawer = 1; // [0:20]
 preview_pull = 45; // [0:1:100]
+report_cabinet_height = true;
 
 /* [Gridfinity size] */
 gridx = 3; // [1:10]
@@ -53,6 +54,8 @@ hole_options = bundle_hole_options(refined_holes, magnet_holes,
 bin = new_bin(grid_size=[gridx, gridy], height_mm=cabinet_body_height,
     include_lip=include_lip, hole_options=hole_options);
 bbox = bin_get_bounding_box(bin);
+if (report_cabinet_height)
+    echo(str("Cabinet overall height (including lip if enabled): ", bbox.z, " mm"));
 outer_x = bbox.x;
 outer_y = bbox.y;
 inner_x = outer_x - 2 * wall_thickness;

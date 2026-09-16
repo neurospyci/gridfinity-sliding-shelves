@@ -24,5 +24,6 @@ jobs:
           test -s /tmp/assembly.stl
           test -s /tmp/cabinet.stl
           test -s /tmp/drawer.stl
+          grep -q 'Cabinet overall height.*mm' /tmp/assembly.log
           if grep -Ei 'WARNING|ERROR' /tmp/{assembly,assembly-render,cabinet,drawer}.log; then exit 1; fi
 
