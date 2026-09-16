@@ -4,6 +4,18 @@ A parametric Gridfinity cabinet for enamel pins, with four independently sliding
 
 ## Install the dependency in OpenSCAD
 
+If OpenSCAD says `Can't open include file 'gridfinity-rebuilt-openscad/src/core/standard.scad'`, the dependency is not installed where OpenSCAD can find it. The later `BASE_HEIGHT` and `new_bin` errors are consequences of this missing file.
+
+On Windows, download this repository as a ZIP, extract it, and run `install-gridfinity-dependency.ps1` from PowerShell to install the pinned upstream library in your Documents OpenSCAD library folder:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-gridfinity-dependency.ps1
+```
+
+Then reopen `gridfinity-pin-drawers.scad`. The script leaves an existing complete installation untouched and stops if the target folder is incomplete.
+
+Alternatively, install manually:
+
 This design requires the **complete** Gridfinity Rebuilt repository. Download its [ZIP archive](https://github.com/kennetek/gridfinity-rebuilt-openscad/archive/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd.zip) and extract it. In OpenSCAD, choose **File → Show Library Folder**. Put the extracted folder inside `libraries` and rename it exactly `gridfinity-rebuilt-openscad`.
 
 The resulting layout must be:
@@ -17,7 +29,7 @@ OpenSCAD/libraries/
     └── src/helpers/...
 ```
 
-The ZIP normally extracts into a commit-suffixed folder; rename that folder, not just the ZIP. Keep all its files, including `src` and `external`. The design file can then be opened from **any** folder, including `D:/OpenScad_Projs`; it does not need to be copied into the dependency. If OpenSCAD is already open, reopen the design after installing the library. Use **Help → Library Info** to check the library path if imports still fail. The tested dependency revision is [`910e22d`](https://github.com/kennetek/gridfinity-rebuilt-openscad/tree/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd).
+The ZIP normally extracts into a commit-suffixed folder; rename that folder, not just the ZIP. Keep all its files, including `src` and `external`. You can also put the renamed `gridfinity-rebuilt-openscad` folder directly beside `gridfinity-pin-drawers.scad` (for example, at `D:/OpenScad_Projs/gridfinity-rebuilt-openscad`). The design file can otherwise be opened from **any** folder, including `D:/OpenScad_Projs`; it does not need to be copied into the dependency. If OpenSCAD is already open, reopen the design after installing the library. Use **Help → Library Info** to check the library path if imports still fail. The tested dependency revision is [`910e22d`](https://github.com/kennetek/gridfinity-rebuilt-openscad/tree/910e22d8607fd7f5f51ad5e5cbc5287a76810bfd).
 
 ## Use
 

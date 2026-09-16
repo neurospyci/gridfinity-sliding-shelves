@@ -34,7 +34,7 @@ crush_ribs = true;
 chamfer_holes = true;
 printable_hole_top = true;
 
-// Install the full upstream repository as a folder in OpenSCAD's Library Folder.
+// Install the full upstream repository in OpenSCAD's Library Folder, or beside this file.
 include <gridfinity-rebuilt-openscad/src/core/standard.scad>
 use <gridfinity-rebuilt-openscad/src/core/gridfinity-rebuilt-utility.scad>
 use <gridfinity-rebuilt-openscad/src/core/gridfinity-rebuilt-holes.scad>
@@ -42,6 +42,9 @@ use <gridfinity-rebuilt-openscad/src/core/bin.scad>
 
 $fa = 8;
 $fs = 0.4;
+
+assert(!is_undef(BASE_HEIGHT),
+    "Gridfinity Rebuilt is missing. Install the full library as gridfinity-rebuilt-openscad (see README.md).");
 
 cabinet_body_height = BASE_HEIGHT + floor_thickness + 4
     + (drawer_count - 1) * drawer_pitch + rail_height
