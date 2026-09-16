@@ -22,10 +22,12 @@ jobs:
         run: |
           set -euo pipefail
           openscad -o /tmp/assembly.csg -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/assembly.log
+          openscad -o /tmp/assembly.stl -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' -D 'preview_pull=12' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/assembly-render.log
           openscad -o /tmp/cabinet.stl -D 'part="cabinet"' -D 'gridx=1' -D 'gridy=1' -D 'drawer_count=2' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/cabinet.log
           openscad -o /tmp/drawer.stl -D 'part="drawer"' -D 'gridx=1' -D 'gridy=1' gridfinity-pin-drawers.scad 2>&1 | tee /tmp/drawer.log
           test -s /tmp/assembly.csg
+          test -s /tmp/assembly.stl
           test -s /tmp/cabinet.stl
           test -s /tmp/drawer.stl
-          if grep -Ei 'WARNING|ERROR' /tmp/{assembly,cabinet,drawer}.log; then exit 1; fi
+          if grep -Ei 'WARNING|ERROR' /tmp/{assembly,assembly-render,cabinet,drawer}.log; then exit 1; fi
 
