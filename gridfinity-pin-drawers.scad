@@ -8,6 +8,8 @@ report_cabinet_height = true;
 gridx = 3; // [1:10]
 gridy = 3; // [1:10]
 include_lip = true;
+base_style = "lite"; // [lite:Lite,full:Full]
+lite_bottom_thickness = 1; // [0.4:0.2:3]
 
 /* [Drawer storage] */
 drawer_count = 4; // [1:10]
@@ -18,7 +20,6 @@ rail_width = 2.4; // [1.5:0.1:4]
 rail_height = 1.8; // [1:0.1:3]
 wall_thickness = 3.2; // [2.8:0.2:5]
 back_thickness = 3.2; // [2.8:0.2:5]
-floor_thickness = 2; // [1.2:0.2:4]
 front_pull_depth = 7; // [3:1:15]
 
 /* [Pin holes] */
@@ -46,13 +47,15 @@ $fs = 0.4;
 assert(!is_undef(BASE_HEIGHT),
     "Gridfinity Rebuilt is missing. Open this file from the complete project folder (see README.md).");
 
-cabinet_body_height = BASE_HEIGHT + floor_thickness + 4
+cabinet_body_height = BASE_HEIGHT + 4
     + (drawer_count - 1) * drawer_pitch + rail_height
     + drawer_clearance + drawer_plate_thickness + 5;
+base_thickness = base_style == "lite" ? lite_bottom_thickness : BASE_HEIGHT;
 hole_options = bundle_hole_options(refined_holes, magnet_holes,
     screw_holes, crush_ribs, chamfer_holes, printable_hole_top);
 bin = new_bin(grid_size=[gridx, gridy], height_mm=cabinet_body_height,
-    include_lip=include_lip, hole_options=hole_options);
+    include_lip=include_lip, hole_options=hole_options,
+    base_thickness=base_thickness);
 bbox = bin_get_bounding_box(bin);
 if (report_cabinet_height)
     echo(str("Cabinet overall height (including lip if enabled): ", bbox.z, " mm"));
@@ -63,8 +66,12 @@ inner_y = outer_y - back_thickness;
 drawer_x = inner_x - 2 * drawer_clearance;
 drawer_y = inner_y - 2 * drawer_clearance;
 drawer_center_y = -back_thickness / 2;
-cavity_floor = BASE_HEIGHT + floor_thickness;
+cavity_floor = BASE_HEIGHT;
 
+assert(base_style == "lite" || base_style == "full",
+    "base_style must be lite or full.");
+assert(lite_bottom_thickness >= 0 && lite_bottom_thickness < BASE_HEIGHT,
+    str("lite_bottom_thickness must be at least 0 and below ", BASE_HEIGHT, " mm."));
 assert(drawer_count >= 1 && drawer_count == floor(drawer_count));
 assert(drawer_pitch > drawer_plate_thickness + rail_height + drawer_clearance);
 assert(rail_width > drawer_clearance);

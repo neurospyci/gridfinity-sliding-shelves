@@ -22,8 +22,10 @@ F5 uses simplified installed drawers to keep the dense hole pattern responsive. 
 | `gridx` | `3` | Number of upstream Gridfinity units across X. Increasing it widens the base, cabinet, drawer, rails, and hole field. One additional standard unit adds roughly 42 mm to the outside width and drawer width; the number of hole columns rises in steps, depending on `hole_pitch`. Height is unchanged. |
 | `gridy` | `3` | Number of units along Y. Increasing it deepens the base, cabinet, drawer, rails, and hole field. One additional standard unit adds roughly 42 mm to the outside depth and drawer depth. Height is unchanged. The pull tab remains at the front. |
 | `include_lip` | `true` | Uses Gridfinity Rebuilt's stacking lip on top of the cabinet when true. Turning it off removes that upper lip and reduces the overall height by the lip's actual height; it does not change the 7 mm base, body-height calculation, rail levels, or drawer size. The minimum `wall_thickness` check still applies even when the lip is off. |
+| `base_style` | `"lite"` | Selects the upstream Gridfinity base construction. `"lite"` uses Gridfinity Rebuilt's hollow base shell and is the default; `"full"` uses the regular full base. This changes the material inside the 7 mm base profile but does not change the outside footprint, cabinet height, cavity, rails, or drawer dimensions. |
+| `lite_bottom_thickness` | `1` | Bottom skin thickness passed to Gridfinity Rebuilt when `base_style="lite"`. Increasing it strengthens and seals more of the Lite base but uses more material. It does nothing when `base_style="full"`. It must remain below the 7 mm Gridfinity base height. |
 
-The design uses the bundled upstream `new_bin()` and `bin_render()` for the Gridfinity footprint and base. Its outer X/Y dimensions come from `bin_get_bounding_box()`, not a manually rounded `gridx × 42` measurement. Standard units are 42 mm nominal; the upstream perimeter gap affects the exact outside measurement. Check your printer's build volume and baseplate size when increasing either grid dimension.
+The design uses the bundled upstream `new_bin()` and `bin_render()` for the Gridfinity footprint and base. Lite mode is implemented through upstream `new_bin(base_thickness=lite_bottom_thickness)`, the same mechanism used by Gridfinity Rebuilt Lite. Its outer X/Y dimensions come from `bin_get_bounding_box()`, not a manually rounded `gridx × 42` measurement. Standard units are 42 mm nominal; the upstream perimeter gap affects the exact outside measurement. Check your printer's build volume and baseplate size when increasing either grid dimension.
 
 ## Drawer and housing
 
@@ -37,10 +39,9 @@ The design uses the bundled upstream `new_bin()` and `bin_render()` for the Grid
 | `rail_height` | `1.8` | Vertical thickness of each supporting ledge. Increasing it raises every tray by the same amount above its rail's fixed starting level and raises the cabinet body height by the same amount. It does not change drawer-to-drawer pitch, so it reduces the free gap to the next level unless pitch rises too. |
 | `wall_thickness` | `3.2` | Material retained at the **left and right** sides of the upstream bin after cutting the cavity. Adding 1 mm reduces cavity width and drawer width by 2 mm; outside Gridfinity width stays fixed. Wider walls improve side strength but reduce pin area. The code requires at least the upstream lip's inward size. |
 | `back_thickness` | `3.2` | Material retained at the back (+Y). Adding 1 mm shortens the cavity, rails, and drawer by 1 mm while leaving their front opening in place. Outside Gridfinity depth stays fixed. The tray's center shifts forward by 0.5 mm to maintain the same front clearance. |
-| `floor_thickness` | `2` | Extra material above the upstream 7 mm Gridfinity base. Adding 1 mm raises the cavity floor, all rails, all installed drawers, and cabinet body height by 1 mm. It does not thicken the drawer STL or change its X/Y size. |
 | `front_pull_depth` | `7` | How far the tab extends beyond the drawer's front edge. The tab is 2 mm overlapped into the plate and, when closed, projects about `front_pull_depth - drawer_clearance` beyond the cabinet's front. It does not change cabinet depth. The finger cutout stays 15 mm in diameter; extreme tab depths should be checked in preview and test-printed for grip and strength. |
 
-The rails run from the open front toward the back wall. There are no modeled retention stops: a drawer can be pulled all the way out. `preview_pull` changes only the assembly pose; it does not simulate friction, sagging, or loaded-pin collisions.
+The cavity begins directly above the 7 mm Gridfinity base profile. There is no separate full-area cabinet floor above it. In Lite mode, the lowest drawer is supported by its two rails while the center below it remains hollow according to Gridfinity Rebuilt's Lite base geometry. The rails run from the open front toward the back wall. There are no modeled retention stops: a drawer can be pulled all the way out. `preview_pull` changes only the assembly pose; it does not simulate friction, sagging, or loaded-pin collisions.
 
 ## Pin-hole field
 
@@ -73,8 +74,9 @@ All three hole types off is a valid, simpler base. The defaults for `crush_ribs`
 The following equations describe the current source. `outer_x` and `outer_y` are reported by the bundled Gridfinity Rebuilt bin:
 
 ```text
-cavity_floor       = 7 + floor_thickness
-cabinet_body_height = 7 + floor_thickness + 4
+cavity_floor       = 7
+base_thickness     = base_style == "lite" ? lite_bottom_thickness : 7
+cabinet_body_height = 7 + 4
                     + (drawer_count - 1) × drawer_pitch
                     + rail_height + drawer_clearance
                     + drawer_plate_thickness + 5
@@ -86,7 +88,7 @@ rail_bottom(i)     = cavity_floor + 1 + i × drawer_pitch
 drawer_bottom(i)   = rail_bottom(i) + rail_height + drawer_clearance
 ```
 
-Here `i` is zero for the lowest drawer. With the defaults, the cavity starts at **9 mm**, rail bottoms are **10, 23, 36, and 49 mm**, drawer undersides are **12.15, 25.15, 38.15, and 51.15 mm**, and the cabinet body height excluding the optional lip is **61.15 mm**. The actual overall height includes the upstream stacking lip when enabled.
+Here `i` is zero for the lowest drawer. With the defaults, the cavity starts at **7 mm**, rail bottoms are **8, 21, 34, and 47 mm**, drawer undersides are **10.15, 23.15, 36.15, and 49.15 mm**, and the cabinet body height excluding the optional lip is **59.15 mm**. The actual overall height includes the upstream stacking lip when enabled.
 
 The 4 mm and 5 mm terms in `cabinet_body_height` and the 1 mm rail offset are fixed allowances in this model, not Customizer controls. They do not measure the height of a loaded pin. The script enforces basic geometric inequalities, but it cannot guarantee print tolerances, clutch clearance, or that a large configuration fits your printer. Render both parts and test-print a tray/slide fit before making a full set.
 
@@ -95,5 +97,7 @@ The 4 mm and 5 mm terms in `cabinet_body_height` and the 1 mm rail offset are fi
 - `drawer_count = 5`: adds one rail pair and one installed tray, adds **13 mm** to body height, and requires printing five identical drawer STLs.
 - `drawer_pitch = 16`: leaves tray size unchanged and adds **9 mm** to body height with four drawers, creating 3 mm more vertical space between adjacent tray levels.
 - `drawer_clearance = 0.5`: makes each tray **0.3 mm narrower and 0.3 mm shorter**, raises its modeled underside **0.15 mm**, and adds **0.15 mm** to body height. It also reduces edge overlap on each rail.
+- `base_style = "full"`: restores the regular upstream base while leaving the outside size, rail heights, drawers, and reported cabinet height unchanged.
+- `lite_bottom_thickness = 1.6`: adds 0.6 mm to the Lite base's bottom skin without adding a solid floor above the 7 mm base or changing cabinet height.
 - `preview_pull = 0`: closes the selected drawer in assembly view; it changes neither printable STL.
 

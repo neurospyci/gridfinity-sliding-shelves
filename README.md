@@ -1,6 +1,6 @@
 # Gridfinity Sliding Pin Drawers
 
-A parametric Gridfinity cabinet for enamel pins, with four independently sliding perforated trays by default. The Gridfinity base and stacking lip come from [Gridfinity Rebuilt](https://github.com/kennetek/gridfinity-rebuilt-openscad); the drawer cavity, side rails, and trays are custom geometry.
+A parametric Gridfinity cabinet for enamel pins, with four independently sliding perforated trays by default. The Gridfinity base and stacking lip come from [Gridfinity Rebuilt](https://github.com/kennetek/gridfinity-rebuilt-openscad); the drawer cavity, side rails, and trays are custom geometry. The cabinet defaults to the material-saving Gridfinity Rebuilt Lite base.
 
 ## Download and open
 
@@ -25,7 +25,7 @@ After F5 or F6, look in OpenSCAD's **Console** for `Cabinet overall height ... m
 
 Set `part = "cabinet"` and press F6 to export the cabinet STL. Set `part = "drawer"` to export a single tray STL; print `drawer_count` copies. `part = "assembly"` is for checking alignment, not for printing as one piece.
 
-Key Customizer controls are `gridx`, `gridy`, `drawer_count`, `drawer_pitch`, `drawer_clearance`, `wall_thickness`, `rail_width`, `hole_diameter`, `hole_pitch`, `stagger_holes`, `include_lip`, and the Gridfinity base-hole choices. Cabinet height derives from drawer count and pitch. Coordinates are centered on the Gridfinity footprint; the front is negative Y. The cavity begins above the 7 mm upstream base and a separate floor, so the Gridfinity base is retained. Each ledge runs front to back under its drawer edge.
+Key Customizer controls are `gridx`, `gridy`, `base_style`, `lite_bottom_thickness`, `drawer_count`, `drawer_pitch`, `drawer_clearance`, `wall_thickness`, `rail_width`, `hole_diameter`, `hole_pitch`, `stagger_holes`, `include_lip`, and the Gridfinity base-hole choices. Cabinet height derives from drawer count and pitch. Coordinates are centered on the Gridfinity footprint; the front is negative Y. The cavity begins directly above the 7 mm upstream base. There is no separate solid bin floor across the cabinet; each drawer is supported by its two side rails. Set `base_style="full"` only when a regular full Gridfinity base is wanted.
 
 See the [complete parameter guide](PARAMETERS.md) for every control, dimensional formulas, interactions, and practical print effects.
 
